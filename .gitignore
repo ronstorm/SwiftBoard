@@ -45,7 +45,7 @@ fastlane/test_output
 
 # Cursor AI
 .cursorrules           # legacy v1 (if not used, ignore)
-.cursor/rules/*.mdc    # KEEP these in Git (project rules must be shared)
+.cursor/rules/    # KEEP these in Git (project rules must be shared)
 .cursor/agents/        # ignore if agent cache appears
 .cursor/tmp/
 Instructions/
