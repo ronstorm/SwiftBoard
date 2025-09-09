@@ -1,0 +1,163 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+
+env:
+  XCODE_VERSION: '16.0'
+  IOS_SIMULATOR: 'iPhone 16'
+  IOS_VERSION: '18.6'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-15
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      
+    - name: Verify Xcode Version
+      run: xcodebuild -version
+      
+    - name: Cache Swift Package Manager
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+          
+    - name: Cache DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.xcodeproj', '**/*.xcworkspace') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+          
+    - name: List available simulators
+      run: xcrun simctl list devices available
+      
+    - name: Build
+      run: |
+        xcodebuild clean build \
+          -scheme SwiftBoard \
+          -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR }},OS=${{ env.IOS_VERSION }}" \
+          -configuration Debug \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+          
+    - name: Run Tests
+      run: |
+        xcodebuild test \
+          -scheme SwiftBoard \
+          -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR }},OS=${{ env.IOS_VERSION }}" \
+          -configuration Debug \
+          -enableCodeCoverage YES \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+          
+    - name: Generate Code Coverage Report
+      run: |
+        # Find the latest xcresult file
+        XCRESULT_FILE=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -type d | head -1)
+        if [ -n "$XCRESULT_FILE" ]; then
+          xcrun xccov view --report --json "$XCRESULT_FILE" > coverage.json
+        else
+          echo "No xcresult file found, creating empty coverage report"
+          echo '{"coverage": {}}' > coverage.json
+        fi
+        
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.json
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        
+  lint:
+    name: SwiftLint
+    runs-on: macos-15
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install SwiftLint
+      run: |
+        brew install swiftlint
+        
+    - name: Run SwiftLint
+      run: swiftlint
+        
+  security-scan:
+    name: Security Scan
+    runs-on: macos-15
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Run Security Scan
+      run: |
+        # Check for hardcoded secrets in source files only (exclude build artifacts and test files)
+        if find . -name "*.swift" -not -path "./build/*" -not -path "./.build/*" -not -path "./DerivedData/*" -not -path "./xcuserdata/*" -not -path "./.git/*" -not -path "*/Tests/*" -not -path "*/Test/*" -not -name "*Test*.swift" -not -name "*Mock*.swift" -exec grep -l "password.*=.*[\"'][^\"']*[\"']\|secret.*=.*[\"'][^\"']*[\"']\|apiKey.*=.*[\"'][^\"']*[\"']" {} \; | grep -v "// TODO\|// FIXME\|// NOTE"; then
+          echo "Potential hardcoded secrets found!"
+          exit 1
+        fi
+        
+        # Check for insecure network configurations
+        if find . -name "*.swift" -not -path "./build/*" -not -path "./.build/*" -not -path "./DerivedData/*" -not -path "./xcuserdata/*" -not -path "./.git/*" -not -path "*/Tests/*" -not -path "*/Test/*" -not -name "*Test*.swift" -not -name "*Mock*.swift" -exec grep -l "http://" {} \; | grep -v "localhost\|127.0.0.1"; then
+          echo "Insecure HTTP connections found!"
+          exit 1
+        fi
+        
+  release:
+    name: Create Release
+    runs-on: macos-15
+    needs: [build-and-test, lint, security-scan]
+    if: github.event_name == 'release'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Build Release
+      run: |
+        xcodebuild archive \
+          -scheme SwiftBoard \
+          -destination "generic/platform=iOS" \
+          -archivePath SwiftBoard.xcarchive \
+          -configuration Release \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+          
+    - name: Export IPA
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath SwiftBoard.xcarchive \
+          -exportPath ./build \
+          -exportOptionsPlist ExportOptions.plist
+          
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./build/SwiftBoard.ipa
+        asset_name: SwiftBoard-${{ github.event.release.tag_name }}.ipa
+        asset_content_type: application/octet-stream
