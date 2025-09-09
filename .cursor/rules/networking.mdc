@@ -1,0 +1,13 @@
+---
+description: Networking, API clients, and token refresh.
+globs:
+    - "Core/Networking/**"
+    - "Core/Clients/**"
+---
+- Create protocol-based clients: authClient, profileClient, tasksClient, activityClient.
+- Implement a MockAPI that reads JSON fixtures. No real backend.
+- Add 401 handling. On 401, call refresh. Retry once. Then fail gracefully.
+- Parse with Codable. Fail with domain errors from ErrorMap.
+- Support ETag/Last-Modified headers in mock responses (optional).
+- All network calls return typed results and domain errors.
+- Add an integration test for token refresh with a stub transport.

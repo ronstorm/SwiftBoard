@@ -1,0 +1,10 @@
+---
+description: Deep link handling.
+globs:
+    - "App/**"
+    - "Features/Auth/**"
+---
+- Support myapp://reset-password?code=...
+- If code is missing or invalid, show “Link not valid”.
+- Do not mutate tokens from this flow. It is a stub.
+- Add a reducer test to ensure navigation to S-004.

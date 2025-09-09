@@ -1,0 +1,13 @@
+---
+description: CI/CD and quality gates.
+globs:
+    - ".github/workflows/**"
+    - "Fastfile"
+---
+- GitHub Actions:
+    - Build, run tests, run snapshots on iOS latest.
+    - Lint/format check (SwiftFormat/SwiftLint if used).
+    - Upload coverage (xcresult + slather/codecov).
+- On tag, create a GitHub Release with the .ipa/.xcarchive artifact.
+- Add PR template and Conventional Commits check.
+- Fail build on coverage drop or lint errors.

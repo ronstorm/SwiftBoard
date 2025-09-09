@@ -1,0 +1,13 @@
+---
+description: How to prompt Cursor AI with IDs.
+globs:
+    - ".cursor/**"
+---
+- Always reference IDs from the RD.
+- Examples:
+    - "Implement F-001 on S-002 with D-001 (Keychain). Add reducer tests."
+    - "Build S-005 with cards from F-004 using D-002–D-004 and SWR F-007."
+    - "Add tests for F-006 and user story US-008."
+    - "Wire F-002 routing. Snapshot tests for entry (S-002, S-005)."
+    - "Create Settings S-008 with F-008. Test toggles and sign-out."
+- Keep prompts short and specific.

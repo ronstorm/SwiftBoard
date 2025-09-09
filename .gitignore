@@ -1,0 +1,67 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*~
+
+# Xcode
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/xcshareddata/WorkspaceSettings.xcsettings
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Swift Package Manager
+.build/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm/xcode/xcuserdata/
+.swiftpm/xcode/xcshareddata/
+
+# CocoaPods (if used — but prefer SwiftPM in Cursor projects)
+Pods/
+Podfile.lock
+*.xcworkspace
+
+# Carthage (if used)
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# SwiftLint / SwiftFormat cache
+.swiftlint.yml.lock
+.swiftformat.lock
+
+# Cursor AI
+.cursorrules           # legacy v1 (if not used, ignore)
+.cursor/rules/*.mdc    # KEEP these in Git (project rules must be shared)
+.cursor/agents/        # ignore if agent cache appears
+.cursor/tmp/
+Instructions/
+buildServer.json
+
+# User-specific files
+*.env
+*.local
+*.key
+*.crt
+*.pem
+*.p12
+
+# Logs
+*.log
+
+# Temporary
+*.tmp
+*.bak

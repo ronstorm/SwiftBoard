@@ -1,0 +1,14 @@
+---
+description: App architecture and layering.
+globs:
+    - "SwiftBoard/**"
+    - "Package.swift"
+---
+- Use TCA for all feature state. One reducer per screen or card.
+- Use Clean modules: App, Features, Core, Platform, Testing.
+- Interactors live in Core/Domain. They are pure. No UIKit/SwiftUI in Core.
+- Use dependency injection via TCA @Dependency and DependencyValues.
+- No singletons. Use DI or environment.
+- Keep files short. Prefer composition over large reducers.
+- Keep UI logic in Views. Keep business rules in Reducers/Interactors.
+- Support preview data for all views.

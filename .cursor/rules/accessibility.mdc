@@ -1,0 +1,11 @@
+---
+description: Accessibility and theming.
+globs:
+    - "Features/**"
+    - "Core/Design/**"
+---
+- Provide VoiceOver labels for all controls.
+- Support Dynamic Type. Test at XL sizes with snapshots.
+- Check contrast for text on cards.
+- Use design tokens for spacing, radius, typography, colors.
+- Support light, dark, and system themes.

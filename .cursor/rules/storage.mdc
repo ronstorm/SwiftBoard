@@ -1,0 +1,16 @@
+---
+description: Core Data caching rules.
+globs:
+    - "Platform/Persistence/**"
+    - "Core/Repositories/**"
+---
+- Use Core Data. Create a small model:
+    - CDUser(id, name, avatarUrl, lastLogin, updatedAt).
+    - CDTask(id, title, done, updatedAt).
+    - CDActivity(id, type, title, createdAt).
+    - CDMeta(entity, etag, lastModified, fetchedAt, schemaVersion).
+- Wrap Core Data in a Repository protocol per entity.
+- Read from cache first. Then fetch network. Then merge.
+- Use background context for writes. View context for reads.
+- Add a v1 schema now. Add a migration test scaffold (v1→v1).
+- Provide in-memory store for tests and previews.
