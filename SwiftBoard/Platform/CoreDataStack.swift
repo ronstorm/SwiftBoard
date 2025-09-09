@@ -1,12 +1,13 @@
 //
-//  Persistence.swift
+//  CoreDataStack.swift
 //  SwiftBoard
 //
 //  Created by Amit Sen on 9/9/25.
-//
+//  © 2025 Coding With Amit. All rights reserved.
 
 import CoreData
 
+/// Core Data stack for the SwiftBoard app
 struct PersistenceController {
     static let shared = PersistenceController()
 

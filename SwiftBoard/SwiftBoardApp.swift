@@ -3,7 +3,7 @@
 //  SwiftBoard
 //
 //  Created by Amit Sen on 9/9/25.
-//
+//  © 2025 Coding With Amit. All rights reserved.
 
 import SwiftUI
 
@@ -13,7 +13,7 @@ struct SwiftBoardApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
