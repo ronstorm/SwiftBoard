@@ -101,11 +101,13 @@ custom_rules:
   # Prevent force unwrapping in production code
   no_force_unwrapping:
     name: "No Force Unwrapping"
-    regex: '!\s*$'
+    regex: '!\s*(?!\s*$)'
     match_kinds:
-      - comment
-      - doccomment
-      - string
+      - identifier
+      - objectliteral
+      - parameter
+      - typeidentifier
+      - variable
     message: "Force unwrapping should be avoided in production code"
     severity: warning
 
