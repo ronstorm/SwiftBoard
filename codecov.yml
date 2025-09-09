@@ -1,0 +1,37 @@
+# Codecov configuration for SwiftBoard
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 5%
+        informational: true
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+        informational: true
+
+comment:
+  layout: "header,diff,files,footer"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+
+github_checks:
+  annotations: true
+
+ignore:
+  - "SwiftBoardTests/"
+  - "SwiftBoardUITests/"
+  - "*.swift" # Ignore generated files
+  - "DerivedData/"
+  - ".build/"
+
+flags:
+  unittests:
+    paths:
+      - SwiftBoard/
+    carryforward: true
