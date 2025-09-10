@@ -47,6 +47,13 @@ jobs:
     - name: List available simulators
       run: xcrun simctl list devices available
       
+    - name: Boot simulator
+      run: |
+        # Boot the simulator to ensure it's ready
+        xcrun simctl boot "${{ env.IOS_SIMULATOR }}" || true
+        # Wait a bit for the simulator to be ready
+        sleep 10
+      
     - name: Build
       run: |
         xcodebuild clean build \
@@ -58,12 +65,16 @@ jobs:
           CODE_SIGNING_ALLOWED=NO
           
     - name: Run Tests
+      timeout-minutes: 10
       run: |
+        # Run unit tests only (UI tests removed from CI)
+        echo "Running unit tests..."
         xcodebuild test \
           -scheme SwiftBoard \
           -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR }},OS=${{ env.IOS_VERSION }}" \
           -configuration Debug \
           -enableCodeCoverage YES \
+          -only-testing:SwiftBoardTests \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO

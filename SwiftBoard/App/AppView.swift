@@ -20,7 +20,9 @@ struct AppView: View {
       Group {
         switch viewStore.state.route {
         case .onboarding:
-          OnboardingView()
+          OnboardingView {
+            viewStore.send(.onboardingCompleted)
+          }
         case .auth:
           AuthView()
         case .dashboard:
@@ -49,6 +51,7 @@ enum AppAction {
   case routeChanged(AppRoute)
   case errorOccurred(String)
   case errorDismissed
+  case onboardingCompleted
 }
 
 // MARK: - App Routes
@@ -94,6 +97,11 @@ struct AppReducer: Reducer {
     case .errorDismissed:
       state.errorMessage = nil
       return []
+      
+    case .onboardingCompleted:
+      // Move to auth after onboarding completion
+      state.route = .auth
+      return []
     }
   }
 }
@@ -101,30 +109,6 @@ struct AppReducer: Reducer {
 
 // MARK: - Placeholder Views
 
-struct OnboardingView: View {
-  var body: some View {
-    VStack(spacing: DesignTokens.Spacing.lg) {
-      Image(systemName: "checkmark.circle.fill")
-        .font(.system(size: 80))
-        .foregroundColor(DesignTokens.Colors.primary)
-      
-      Text("Welcome to SwiftBoard")
-        .font(DesignTokens.Typography.largeTitle)
-        .foregroundColor(DesignTokens.Colors.onBackground)
-      
-      Text("Your personal task management dashboard")
-        .font(DesignTokens.Typography.body)
-        .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
-        .multilineTextAlignment(.center)
-      
-      Button("Continue") {
-        // This will be handled by the parent store
-      }
-      .buttonStyle(PrimaryButtonStyle())
-    }
-    .padding(DesignTokens.Spacing.xl)
-  }
-}
 
 struct AuthView: View {
   var body: some View {
