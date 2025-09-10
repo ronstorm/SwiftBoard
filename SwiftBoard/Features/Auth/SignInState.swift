@@ -12,6 +12,10 @@ public struct SignInState: Equatable {
   public var password: String = ""
   public var isSubmitting: Bool = false
   public var errorMessage: String?
+  public var emailValidationError: String?
+  public var passwordValidationError: String?
+  public var hasEmailFieldBeenFocused: Bool = false
+  public var hasPasswordFieldBeenFocused: Bool = false
   public var isAuthenticated: Bool = false
 
   public init() {}

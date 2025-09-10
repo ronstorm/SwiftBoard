@@ -13,6 +13,8 @@ public struct SignInView: View {
     reducer: SignInReducer(),
     dependencies: .live
   )
+  @FocusState private var isEmailFieldFocused: Bool
+  @FocusState private var isPasswordFieldFocused: Bool
 
   let onSuccess: (() -> Void)?
 
@@ -40,28 +42,84 @@ public struct SignInView: View {
 
         // Form fields
         VStack(spacing: DesignTokens.Spacing.md) {
-          TextField("Email", text: Binding(
-            get: { viewStore.state.email },
-            set: { viewStore.send(.emailChanged($0)) }
-          ))
-          .textContentType(.emailAddress)
-          .keyboardType(.emailAddress)
-          .textInputAutocapitalization(.never)
-          .disableAutocorrection(true)
-          .padding()
-          .background(DesignTokens.Colors.surface)
-          .cornerRadius(DesignTokens.Radius.md)
-          .accessibilityLabel("Email address")
+          VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            TextField("Email", text: Binding(
+              get: { viewStore.state.email },
+              set: { viewStore.send(.emailChanged($0)) }
+            ))
+            .textContentType(.emailAddress)
+            .keyboardType(.emailAddress)
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .padding()
+            .background(DesignTokens.Colors.surface)
+            .cornerRadius(DesignTokens.Radius.md)
+            .overlay(
+              RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                .stroke(
+                  viewStore.state.emailValidationError != nil 
+                    ? DesignTokens.Colors.error 
+                    : DesignTokens.Colors.primary,
+                  lineWidth: 1
+                )
+            )
+            .accessibilityLabel("Email address")
+            .focused($isEmailFieldFocused)
+            .onSubmit {
+              viewStore.send(.emailFocusLost)
+            }
+            .onTapGesture {
+              // Clear validation error when user starts typing again
+              if viewStore.state.emailValidationError != nil {
+                viewStore.send(.emailChanged(viewStore.state.email))
+              }
+            }
+            
+            if let emailError = viewStore.state.emailValidationError {
+              Text(emailError)
+                .font(DesignTokens.Typography.footnote)
+                .foregroundColor(DesignTokens.Colors.error)
+                .accessibilityLabel("Email validation error: \(emailError)")
+            }
+          }
 
-          SecureField("Password", text: Binding(
-            get: { viewStore.state.password },
-            set: { viewStore.send(.passwordChanged($0)) }
-          ))
-          .textContentType(.password)
-          .padding()
-          .background(DesignTokens.Colors.surface)
-          .cornerRadius(DesignTokens.Radius.md)
-          .accessibilityLabel("Password")
+          VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            SecureField("Password", text: Binding(
+              get: { viewStore.state.password },
+              set: { viewStore.send(.passwordChanged($0)) }
+            ))
+            .textContentType(.password)
+            .padding()
+            .background(DesignTokens.Colors.surface)
+            .cornerRadius(DesignTokens.Radius.md)
+            .overlay(
+              RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                .stroke(
+                  viewStore.state.passwordValidationError != nil 
+                    ? DesignTokens.Colors.error 
+                    : DesignTokens.Colors.primary,
+                  lineWidth: 1
+                )
+            )
+            .accessibilityLabel("Password")
+            .focused($isPasswordFieldFocused)
+            .onSubmit {
+              viewStore.send(.passwordFocusLost)
+            }
+            .onTapGesture {
+              // Clear validation error when user starts typing again
+              if viewStore.state.passwordValidationError != nil {
+                viewStore.send(.passwordChanged(viewStore.state.password))
+              }
+            }
+            
+            if let passwordError = viewStore.state.passwordValidationError {
+              Text(passwordError)
+                .font(DesignTokens.Typography.footnote)
+                .foregroundColor(DesignTokens.Colors.error)
+                .accessibilityLabel("Password validation error: \(passwordError)")
+            }
+          }
         }
 
         // Sign In button
@@ -98,6 +156,20 @@ public struct SignInView: View {
       .background(DesignTokens.Colors.background)
       .onChange(of: viewStore.state.isAuthenticated) { _, isAuthed in
         if isAuthed { onSuccess?() }
+      }
+      .onChange(of: isEmailFieldFocused) { _, isFocused in
+        if isFocused {
+          viewStore.send(.emailFocusGained)
+        } else {
+          viewStore.send(.emailFocusLost)
+        }
+      }
+      .onChange(of: isPasswordFieldFocused) { _, isFocused in
+        if isFocused {
+          viewStore.send(.passwordFocusGained)
+        } else {
+          viewStore.send(.passwordFocusLost)
+        }
       }
       .onAppear { viewStore.send(.onAppear) }
     }

@@ -10,7 +10,11 @@ import Foundation
 public enum SignInAction {
   case onAppear
   case emailChanged(String)
+  case emailFocusGained
+  case emailFocusLost
   case passwordChanged(String)
+  case passwordFocusGained
+  case passwordFocusLost
   case signInTapped
   case appleSignInTapped
   case signInResponseSuccess(LoginResponse)

@@ -23,11 +23,45 @@ public struct SignInReducer: Reducer {
     case .emailChanged(let value):
       state.email = value
       state.errorMessage = nil
+      state.emailValidationError = nil
+      return []
+
+    case .emailFocusGained:
+      state.hasEmailFieldBeenFocused = true
+      return []
+
+    case .emailFocusLost:
+      if state.hasEmailFieldBeenFocused {
+        if state.email.isEmpty {
+          state.emailValidationError = "Email is required"
+        } else if !state.isValidEmail(state.email) {
+          state.emailValidationError = "Please enter a valid email address"
+        } else {
+          state.emailValidationError = nil
+        }
+      }
       return []
 
     case .passwordChanged(let value):
       state.password = value
       state.errorMessage = nil
+      state.passwordValidationError = nil
+      return []
+
+    case .passwordFocusGained:
+      state.hasPasswordFieldBeenFocused = true
+      return []
+
+    case .passwordFocusLost:
+      if state.hasPasswordFieldBeenFocused {
+        if state.password.isEmpty {
+          state.passwordValidationError = "Password is required"
+        } else if state.password.count < 6 {
+          state.passwordValidationError = "Password must be at least 6 characters"
+        } else {
+          state.passwordValidationError = nil
+        }
+      }
       return []
 
     case .signInTapped:
