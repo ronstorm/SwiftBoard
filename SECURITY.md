@@ -108,7 +108,7 @@ In case of a security incident:
 
 For security-related questions or concerns:
 
-- **Email**: [security@codingwithamit.com](mailto:security@codingwithamit.com)
+- **Email**: [me@amitsen.de](mailto:me@amitsen.de)
 - **Response Time**: We aim to respond within 24 hours
 - **PGP Key**: Available upon request for encrypted communications
 
