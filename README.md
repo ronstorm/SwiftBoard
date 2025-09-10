@@ -12,12 +12,23 @@ A modern SwiftUI demo app built with TCA (The Composable Architecture) that demo
 
 ## 🚀 Features
 
+- **Onboarding**: Multi-page onboarding flow with progress tracking and accessibility support
 - **Authentication**: Email/Password and Apple Sign-In support
 - **Offline-First**: Core Data caching with network synchronization
 - **TCA Architecture**: Predictable state management with reducers and effects
 - **Modern UI**: SwiftUI with design tokens and accessibility support
 - **Testing**: Comprehensive unit and integration tests
 - **CI/CD**: Automated builds, tests, and releases
+
+## ✅ Completed Features
+
+### B-002: Onboarding Flow (S-001)
+- **State Management**: Complete TCA implementation with `OnboardingState`, `OnboardingAction`, and `OnboardingReducer`
+- **UI Components**: Multi-page onboarding view with progress tracking and navigation
+- **Accessibility**: Full VoiceOver support with semantic labels and hints
+- **Design System**: Integrated with design tokens for consistent styling
+- **Testing**: Comprehensive unit tests covering all reducer logic and state transitions
+- **Integration**: Seamlessly integrated into app routing system
 
 <!-- ## 📱 Screenshots
 
@@ -33,6 +44,7 @@ SwiftBoard follows a clean architecture pattern with TCA (The Composable Archite
 App/
 ├── App/              # App entry, composition, routes
 ├── Features/         # Feature modules (Onboarding, Auth, Dashboard, etc.)
+│   └── Onboarding/   # Onboarding flow with TCA state management
 ├── Core/             # Domain models, Interactors, ErrorMap, Observability
 ├── Core/TCA/         # TCA-lite implementation (Store, Reducer, Effect, Dependencies)
 ├── Platform/         # Keychain, Core Data stack, OS services
@@ -117,6 +129,8 @@ SwiftBoardTests/
 │   └── TCA/
 │       └── StoreTests.swift
 ├── Features/
+│   ├── Onboarding/
+│   │   └── OnboardingReducerTests.swift
 │   ├── Auth/
 │   ├── Dashboard/
 │   └── Settings/
@@ -220,7 +234,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-- **Amit Sen** - *Initial work* - [@amitsen](https://github.com/amitsen)
+- **Amit Sen** - *Initial work* - [@amitsen](https://github.com/ronstorm)
 
 ## 🙏 Acknowledgments
 
