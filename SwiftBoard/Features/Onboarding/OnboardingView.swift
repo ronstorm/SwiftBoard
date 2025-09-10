@@ -51,14 +51,14 @@ public struct OnboardingView: View {
                 }
                 .background(DesignTokens.Colors.background)
                 .onAppear {
-                    // currentPage = viewStore.state.currentPage
+                    currentPage = viewStore.state.currentPage
                     viewStore.send(.onAppear)
                 }
                 .onDisappear {
                     viewStore.send(.onDisappear)
                 }
                 .onChange(of: viewStore.state.currentPage) { _, newValue in
-                    // ✅ Only update if different — prevents flicker
+                    // Only update if different to prevent flicker
                     if currentPage != newValue {
                         currentPage = newValue
                     }
@@ -144,14 +144,14 @@ public struct OnboardingView: View {
         VStack(spacing: DesignTokens.Spacing.md) {
             // Continue/Get Started button
             Button(action: {
-              if currentPage == viewStore.state.totalPages - 1 {
-                viewStore.send(.continueTapped)
-              } else {
-                withAnimation(.easeInOut) {
-                  currentPage += 1
+                if currentPage == viewStore.state.totalPages - 1 {
+                    viewStore.send(.continueTapped)
+                } else {
+                    withAnimation(.easeInOut) {
+                        currentPage += 1
+                    }
+                    viewStore.send(.pageChanged(currentPage))
                 }
-                viewStore.send(.pageChanged(currentPage))
-              }
             }) {
               HStack {
                 Text(currentPage == viewStore.state.totalPages - 1 ? "Get Started" : "Continue")
