@@ -63,11 +63,12 @@ public struct OnboardingView: View {
                         currentPage = newValue
                     }
                 }
-                .onChange(of: viewStore.state.isCompleted) { _, isCompleted in
-                    if isCompleted {
-                        onCompleted?()
-                    }
-                }
+//                .onChange(of: viewStore.state.isCompleted) { _, isCompleted in
+//                    print("isCompleted: \(isCompleted)")
+//                    if isCompleted {
+//                        onCompleted?()
+//                    }
+//                }
             }
         }
     }
@@ -146,6 +147,11 @@ public struct OnboardingView: View {
             Button(action: {
                 if currentPage == viewStore.state.totalPages - 1 {
                     viewStore.send(.continueTapped)
+                    
+                    // Navigate immediately (UI flow)
+                    DispatchQueue.main.async {
+                        onCompleted?()
+                    }
                 } else {
                     withAnimation(.easeInOut) {
                         currentPage += 1
