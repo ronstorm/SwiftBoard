@@ -17,6 +17,7 @@ public struct Dependencies {
   
   // MARK: - Storage
   public let coreDataService: CoreDataService
+  public var userRepository: UserRepository
   
   // MARK: - System Services
   public let logger: Logger
@@ -27,6 +28,7 @@ public struct Dependencies {
     apiClient: APIClient = .live,
     keychainService: KeychainService = .live,
     coreDataService: CoreDataService = .live,
+    userRepository: UserRepository = .live,
     logger: Logger = .live,
     analytics: AnalyticsService = .live,
     dateProvider: DateProvider = .live
@@ -34,6 +36,7 @@ public struct Dependencies {
     self.apiClient = apiClient
     self.keychainService = keychainService
     self.coreDataService = coreDataService
+    self.userRepository = userRepository
     self.logger = logger
     self.analytics = analytics
     self.dateProvider = dateProvider
@@ -44,6 +47,7 @@ public struct Dependencies {
     apiClient: .mock,
     keychainService: .mock,
     coreDataService: .preview,
+    userRepository: .mock,
     logger: .mock,
     analytics: .mock,
     dateProvider: .mock
@@ -127,4 +131,11 @@ public extension AnalyticsService where Self == LiveAnalyticsService {
 public extension DateProvider where Self == LiveDateProvider {
   static var live: LiveDateProvider { LiveDateProvider() }
   static var mock: MockDateProvider { MockDateProvider() }
+}
+
+public extension UserRepository where Self == LiveUserRepository {
+  static var live: LiveUserRepository { 
+    LiveUserRepository(context: PersistenceController.shared.container.viewContext) 
+  }
+  static var mock: MockUserRepository { MockUserRepository() }
 }

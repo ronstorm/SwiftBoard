@@ -23,7 +23,7 @@ struct AppView: View {
                     OnboardingView {
                         // Animate the route change
                         withAnimation(.easeInOut(duration: 0.35)) {
-                            viewStore.send(.routeChanged(.auth))
+                            viewStore.send(.onboardingCompleted)
                         }
                     }
                     .transition(.asymmetric(
@@ -31,11 +31,39 @@ struct AppView: View {
                         removal: .move(edge: .leading).combined(with: .opacity)
                     ))
                 case .auth:
-                    SignInView()
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .trailing).combined(with: .opacity),
-                            removal: .move(edge: .leading).combined(with: .opacity)
-                        ))
+                    SignInView(
+                        onSuccess: {
+                            withAnimation(.easeInOut(duration: 0.35)) {
+                                viewStore.send(.routeChanged(.dashboard))
+                            }
+                        },
+                        onNavigateToSignUp: {
+                            withAnimation(.easeInOut(duration: 0.35)) {
+                                viewStore.send(.navigateToSignUp)
+                            }
+                        }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .move(edge: .leading).combined(with: .opacity)
+                    ))
+                case .signUp:
+                    SignUpView(
+                        onSuccess: {
+                            withAnimation(.easeInOut(duration: 0.35)) {
+                                viewStore.send(.routeChanged(.dashboard))
+                            }
+                        },
+                        onNavigateToSignIn: {
+                            withAnimation(.easeInOut(duration: 0.35)) {
+                                viewStore.send(.navigateToSignIn)
+                            }
+                        }
+                    )
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .move(edge: .leading).combined(with: .opacity)
+                    ))
                 case .dashboard:
                     DashboardView()
                         .transition(.opacity)
@@ -66,6 +94,9 @@ enum AppAction {
     case errorOccurred(String)
     case errorDismissed
     case onboardingCompleted
+    case navigateToSignUp
+    case navigateToSignIn
+    case checkAuthenticationStatus
 }
 
 // MARK: - App Routes
@@ -73,6 +104,7 @@ enum AppAction {
 enum AppRoute {
     case onboarding
     case auth
+    case signUp
     case dashboard
 }
 
@@ -82,18 +114,26 @@ struct AppReducer: Reducer {
     func reduce(
         _ state: inout AppState,
         _ action: AppAction,
-        _ dependencies: Dependencies
+        _ dependencies: inout Dependencies
     ) -> [Effect<AppAction>] {
         switch action {
         case .onAppear:
+            // Always check authentication status first
             return [.task {
-                // Check if user is already authenticated
+                return .checkAuthenticationStatus
+            }]
+            
+        case .checkAuthenticationStatus:
+            let userRepository = dependencies.userRepository
+            return [.task {
                 do {
-                    let tokenData = try dependencies.keychainService.load(forKey: "access_token")
-                    if tokenData != nil {
+                    // Check if there's a current user in Core Data
+                    let currentUser = try await userRepository.getCurrentUser()
+                    if currentUser != nil {
                         return .routeChanged(.dashboard)
                     } else {
-                        return .routeChanged(.auth)
+                        // User is not authenticated, show onboarding
+                        return .routeChanged(.onboarding)
                     }
                 } catch {
                     return .errorOccurred("Failed to check authentication status")
@@ -113,7 +153,16 @@ struct AppReducer: Reducer {
             return []
             
         case .onboardingCompleted:
-            // Move to auth after onboarding completion
+            // Check authentication status after onboarding completion
+            return [.task {
+                return .routeChanged(.auth)
+            }]
+            
+        case .navigateToSignUp:
+            state.route = .signUp
+            return []
+            
+        case .navigateToSignIn:
             state.route = .auth
             return []
         }

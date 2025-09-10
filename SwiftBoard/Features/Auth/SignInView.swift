@@ -17,9 +17,11 @@ public struct SignInView: View {
   @FocusState private var isPasswordFieldFocused: Bool
 
   let onSuccess: (() -> Void)?
+  let onNavigateToSignUp: (() -> Void)?
 
-  public init(onSuccess: (() -> Void)? = nil) {
+  public init(onSuccess: (() -> Void)? = nil, onNavigateToSignUp: (() -> Void)? = nil) {
     self.onSuccess = onSuccess
+    self.onNavigateToSignUp = onNavigateToSignUp
   }
 
   public var body: some View {
@@ -119,35 +121,57 @@ public struct SignInView: View {
                 .foregroundColor(DesignTokens.Colors.error)
                 .accessibilityLabel("Password validation error: \(passwordError)")
             }
+            
+            // Forgot password button
+            Button("Forgot password?") { 
+              // TODO: Implement forgot password functionality
+            }
+            .font(DesignTokens.Typography.footnote)
+            .foregroundColor(DesignTokens.Colors.primary)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .accessibilityLabel("Forgot password button")
+            .accessibilityHint("Tap to reset your password")
           }
         }
 
         // Sign In button
         Button(action: { viewStore.send(.signInTapped) }) {
           HStack {
-            if viewStore.state.isSubmitting { ProgressView().tint(DesignTokens.Colors.onPrimary) }
-            Text("Sign In")
+            if viewStore.state.isSubmitting {
+              ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: DesignTokens.Colors.onPrimary))
+                .scaleEffect(0.8)
+            }
+            Text(viewStore.state.isSubmitting ? "Signing In..." : "Sign In")
+              .font(DesignTokens.Typography.headline)
+              .foregroundColor(DesignTokens.Colors.onPrimary)
           }
           .frame(maxWidth: .infinity)
+          .padding()
+          .background(
+            viewStore.state.canSubmit ? 
+              DesignTokens.Colors.primary : 
+              DesignTokens.Colors.primary.opacity(0.5)
+          )
+          .cornerRadius(DesignTokens.Radius.md)
         }
-        .buttonStyle(PrimaryButtonStyle())
         .disabled(!viewStore.state.canSubmit)
         .accessibilityLabel("Sign in")
+        .accessibilityHint(viewStore.state.canSubmit ? "Tap to sign in to your account" : "Fill in all required fields to enable this button")
 
-        // Apple stub
-        Button(action: { viewStore.send(.appleSignInTapped) }) {
-          Text("Sign in with Apple (Stub)")
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.bordered)
-
-        // Links row
+        // Sign Up link
         HStack {
-          Button("Forgot password") { }
-            .buttonStyle(.plain)
-          Spacer()
-          Button("Sign Up") { }
-            .buttonStyle(.plain)
+          Text("Don't have an account?")
+            .font(DesignTokens.Typography.body)
+            .foregroundColor(DesignTokens.Colors.onBackground)
+          
+          Button("Sign Up") {
+            onNavigateToSignUp?()
+          }
+          .font(DesignTokens.Typography.body)
+          .foregroundColor(DesignTokens.Colors.primary)
+          .accessibilityLabel("Sign up button")
+          .accessibilityHint("Tap to create a new account")
         }
 
         Spacer()

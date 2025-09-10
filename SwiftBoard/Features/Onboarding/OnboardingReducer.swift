@@ -10,10 +10,10 @@ import Foundation
 public struct OnboardingReducer: Reducer {
     public init() {}
     
-    public func reduce(
+    public     func reduce(
         _ state: inout OnboardingState,
         _ action: OnboardingAction,
-        _ dependencies: Dependencies
+        _ dependencies: inout Dependencies
     ) -> [Effect<OnboardingAction>] {
         switch action {
         case .continueTapped:

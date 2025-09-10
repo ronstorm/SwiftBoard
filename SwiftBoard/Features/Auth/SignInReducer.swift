@@ -13,7 +13,7 @@ public struct SignInReducer: Reducer {
   public func reduce(
     _ state: inout SignInState,
     _ action: SignInAction,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<SignInAction>] {
     switch action {
     case .onAppear:
@@ -70,10 +70,11 @@ public struct SignInReducer: Reducer {
       state.errorMessage = nil
       let email = state.email
       let password = state.password
+      let apiClient = dependencies.apiClient
       return [
         .task {
           do {
-            let response: LoginResponse = try await dependencies.apiClient.request(.login(email: email, password: password))
+            let response: LoginResponse = try await apiClient.request(.login(email: email, password: password))
             return .signInResponseSuccess(response)
           } catch let error as APIError {
             return .signInResponseFailure(error)
@@ -87,12 +88,13 @@ public struct SignInReducer: Reducer {
       state.isSubmitting = true
       state.errorMessage = nil
       // Stubbed Apple sign-in success using same response shape
+      let dateProvider = dependencies.dateProvider
       return [
         .task {
           let response = LoginResponse(
             accessToken: "mock_access_token",
             refreshToken: "mock_refresh_token",
-            user: User(id: "1", name: "Test User", avatarUrl: "https://example.com/avatar.jpg", lastLogin: dependencies.dateProvider.now)
+            user: UserResponse(id: "1", name: "Test User", avatarUrl: "https://example.com/avatar.jpg", lastLogin: dateProvider.now)
           )
           return .appleSignInResponseSuccess(response)
         }

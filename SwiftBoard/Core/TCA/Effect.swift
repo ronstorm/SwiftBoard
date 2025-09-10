@@ -25,9 +25,8 @@ public struct Effect<Action> {
       .eraseToAnyPublisher()
   }
   
-  public func run(_ send: @escaping (Action) -> Void) {
-    var cancellable: AnyCancellable?
-    cancellable = publisher
+  public func run(_ send: @escaping (Action) -> Void) -> AnyCancellable {
+    publisher
       .receive(on: DispatchQueue.main)
       .sink(receiveValue: send)
   }

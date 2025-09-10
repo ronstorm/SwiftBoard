@@ -22,9 +22,10 @@ final class OnboardingReducerTests: XCTestCase {
   
   func testContinueTappedOnFirstPage() {
     var state = OnboardingState()
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
-    let effects = reducer.reduce(&state, .continueTapped, .preview)
+    let effects = reducer.reduce(&state, .continueTapped, &dependencies)
     
     XCTAssertEqual(state.currentPage, 1)
     XCTAssertFalse(state.isCompleted)
@@ -34,9 +35,10 @@ final class OnboardingReducerTests: XCTestCase {
   func testContinueTappedOnLastPage() {
     var state = OnboardingState()
     state.currentPage = 2 // Last page
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
-    let effects = reducer.reduce(&state, .continueTapped, .preview)
+    let effects = reducer.reduce(&state, .continueTapped, &dependencies)
     
     XCTAssertTrue(state.isCompleted)
     XCTAssertEqual(effects.count, 1)
@@ -45,9 +47,10 @@ final class OnboardingReducerTests: XCTestCase {
   
   func testPageChanged() {
     var state = OnboardingState()
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
-    let effects = reducer.reduce(&state, .pageChanged(2), .preview)
+    let effects = reducer.reduce(&state, .pageChanged(2), &dependencies)
     
     XCTAssertEqual(state.currentPage, 2)
     XCTAssertEqual(effects.count, 0)
@@ -56,10 +59,11 @@ final class OnboardingReducerTests: XCTestCase {
   func testPageChangedInvalidPage() {
     var state = OnboardingState()
     state.currentPage = 1
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
     // Try to set invalid page
-    let effects = reducer.reduce(&state, .pageChanged(-1), .preview)
+    let effects = reducer.reduce(&state, .pageChanged(-1), &dependencies)
     
     // Should not change
     XCTAssertEqual(state.currentPage, 1)
@@ -70,9 +74,10 @@ final class OnboardingReducerTests: XCTestCase {
     var state = OnboardingState()
     state.currentPage = 2
     state.isCompleted = true
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
-    let effects = reducer.reduce(&state, .onAppear, .preview)
+    let effects = reducer.reduce(&state, .onAppear, &dependencies)
     
     XCTAssertEqual(state.currentPage, 0)
     XCTAssertFalse(state.isCompleted)
@@ -82,9 +87,10 @@ final class OnboardingReducerTests: XCTestCase {
   
   func testOnboardingCompleted() {
     var state = OnboardingState()
+    var dependencies = Dependencies.preview
     let reducer = OnboardingReducer()
     
-    let effects = reducer.reduce(&state, .onboardingCompleted, .preview)
+    let effects = reducer.reduce(&state, .onboardingCompleted, &dependencies)
     
     XCTAssertTrue(state.isCompleted)
     XCTAssertEqual(effects.count, 0)

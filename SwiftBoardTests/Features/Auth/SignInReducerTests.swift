@@ -22,7 +22,8 @@ final class SignInReducerTests: XCTestCase {
   }
 
   func testSignIn_InvalidCredentials_ShowsError() async {
-    let store = Store(initialState: SignInState(), reducer: SignInReducer(), dependencies: .preview)
+    var dependencies = Dependencies.preview
+    let store = Store(initialState: SignInState(), reducer: SignInReducer(), dependencies: dependencies)
     store.send(.emailChanged("test@example.com"))
     store.send(.passwordChanged("wrong"))
     store.send(.signInTapped)
