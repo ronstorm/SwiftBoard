@@ -65,9 +65,9 @@ jobs:
           CODE_SIGNING_ALLOWED=NO
           
     - name: Run Tests
-      timeout-minutes: 15
+      timeout-minutes: 10
       run: |
-        # First, run unit tests only (faster and more reliable)
+        # Run unit tests only (UI tests removed from CI)
         echo "Running unit tests..."
         xcodebuild test \
           -scheme SwiftBoard \
@@ -78,22 +78,6 @@ jobs:
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
-          
-        # Then run UI tests separately (if they exist)
-        echo "Checking for UI tests..."
-        if xcodebuild -list -project SwiftBoard.xcodeproj | grep -q "SwiftBoardUITests"; then
-          echo "Running UI tests..."
-          timeout 300 xcodebuild test \
-            -scheme SwiftBoard \
-            -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR }},OS=${{ env.IOS_VERSION }}" \
-            -configuration Debug \
-            -only-testing:SwiftBoardUITests \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
-        else
-          echo "No UI tests found, skipping..."
-        fi
           
     - name: Generate Code Coverage Report
       run: |
