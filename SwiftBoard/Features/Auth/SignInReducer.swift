@@ -70,16 +70,25 @@ public struct SignInReducer: Reducer {
       state.errorMessage = nil
       let email = state.email
       let password = state.password
-      let apiClient = dependencies.apiClient
+      var userRepository = dependencies.userRepository
+      let dateProvider = dependencies.dateProvider
       return [
         .task {
           do {
-            let response: LoginResponse = try await apiClient.request(.login(email: email, password: password))
-            return .signInResponseSuccess(response)
-          } catch let error as APIError {
-            return .signInResponseFailure(error)
+            if let user = try await userRepository.authenticateUser(email: email, password: password) {
+              try await userRepository.setCurrentUser(user)
+              // Still emit a success to keep view flow; tokens are not used for Core Data auth
+              let response = LoginResponse(
+                accessToken: "local_coredata_session",
+                refreshToken: "local_coredata_session",
+                user: UserResponse(id: user.id ?? "", name: user.name ?? "", avatarUrl: "", lastLogin: dateProvider.now)
+              )
+              return .signInResponseSuccess(response)
+            } else {
+              return .signInResponseFailure(.invalidCredentials)
+            }
           } catch {
-            return .signInResponseFailure(.networkError)
+            return .signInResponseFailure(.invalidCredentials)
           }
         }
       ]

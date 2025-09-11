@@ -51,7 +51,7 @@ struct AppView: View {
                     SignUpView(
                         onSuccess: {
                             withAnimation(.easeInOut(duration: 0.35)) {
-                                viewStore.send(.routeChanged(.dashboard))
+                                viewStore.send(.navigateToSignIn)
                             }
                         },
                         onNavigateToSignIn: {
