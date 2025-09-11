@@ -10,16 +10,16 @@ import Foundation
 public struct OnboardingReducer: Reducer {
     public init() {}
     
-    public func reduce(
+    public     func reduce(
         _ state: inout OnboardingState,
         _ action: OnboardingAction,
-        _ dependencies: Dependencies
+        _ dependencies: inout Dependencies
     ) -> [Effect<OnboardingAction>] {
         switch action {
         case .continueTapped:
             if state.isLastPage {
                 state.isCompleted = true
-                return [.task { .onboardingCompleted }]
+                return [.init(.onboardingCompleted)]
             } else {
                 state.currentPage += 1
                 return []

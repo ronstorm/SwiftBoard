@@ -72,10 +72,13 @@ enum TestAction {
 }
 
 struct TestReducer: Reducer {
+  typealias State = TestState
+  typealias Action = TestAction
+  
   func reduce(
     _ state: inout TestState,
     _ action: TestAction,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<TestAction>] {
     switch action {
     case .increment:

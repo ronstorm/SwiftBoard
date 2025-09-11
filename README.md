@@ -252,3 +252,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Made with ❤️ by [Coding With Amit](https://codingwithamit.com)**
+ 
+## 🔑 B-003: Sign In (S-002, F-001)
+
+- Screen: `Features/Auth/SignInView.swift` using in-house TCA-lite (`SignInState`, `SignInAction`, `SignInReducer`).
+- Mock credentials: use `test@example.com` with password `password`.
+- On success: tokens saved with keys `access_token`, `refresh_token`, `token_expiry`; app routes to Dashboard placeholder.
+- Reducer tests: skeleton at `SwiftBoardTests/Features/Auth/SignInReducerTests.swift`.
+
+How to try:
+1. Run the app and complete Onboarding.
+2. Enter the mock credentials and tap Sign In.
+3. You should reach the Dashboard placeholder.

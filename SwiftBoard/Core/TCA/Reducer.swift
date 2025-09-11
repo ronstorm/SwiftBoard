@@ -16,13 +16,13 @@ public protocol Reducer<State, Action> {
   func reduce(
     _ state: inout State,
     _ action: Action,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<Action>]
 }
 
 /// A concrete reducer implementation
 public struct AnyReducer<State, Action>: Reducer {
-  private let _reduce: (inout State, Action, Dependencies) -> [Effect<Action>]
+  private let _reduce: (inout State, Action, inout Dependencies) -> [Effect<Action>]
   
   public init<R: Reducer>(_ reducer: R) where R.State == State, R.Action == Action {
     self._reduce = reducer.reduce
@@ -31,9 +31,9 @@ public struct AnyReducer<State, Action>: Reducer {
   public func reduce(
     _ state: inout State,
     _ action: Action,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<Action>] {
-    _reduce(&state, action, dependencies)
+    _reduce(&state, action, &dependencies)
   }
 }
 
@@ -73,10 +73,10 @@ where R1.State == State, R1.Action == Action, R2.State == State, R2.Action == Ac
   func reduce(
     _ state: inout State,
     _ action: Action,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<Action>] {
-    let effects1 = r1.reduce(&state, action, dependencies)
-    let effects2 = r2.reduce(&state, action, dependencies)
+    let effects1 = r1.reduce(&state, action, &dependencies)
+    let effects2 = r2.reduce(&state, action, &dependencies)
     return effects1 + effects2
   }
 }
@@ -90,11 +90,11 @@ where R1.State == State, R1.Action == Action, R2.State == State, R2.Action == Ac
   func reduce(
     _ state: inout State,
     _ action: Action,
-    _ dependencies: Dependencies
+    _ dependencies: inout Dependencies
   ) -> [Effect<Action>] {
-    let effects1 = r1.reduce(&state, action, dependencies)
-    let effects2 = r2.reduce(&state, action, dependencies)
-    let effects3 = r3.reduce(&state, action, dependencies)
+    let effects1 = r1.reduce(&state, action, &dependencies)
+    let effects2 = r2.reduce(&state, action, &dependencies)
+    let effects3 = r3.reduce(&state, action, &dependencies)
     return effects1 + effects2 + effects3
   }
 }

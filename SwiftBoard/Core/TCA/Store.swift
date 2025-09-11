@@ -12,7 +12,7 @@ import _Concurrency
 /// A store that manages state and handles actions through reducers
 public final class Store<State, Action> {
   private let reducer: any Reducer<State, Action>
-  private let dependencies: Dependencies
+  private var dependencies: Dependencies
   
   @Published public private(set) var state: State
   
@@ -29,12 +29,13 @@ public final class Store<State, Action> {
   }
   
   public func send(_ action: Action) {
-    let effects = reducer.reduce(&state, action, dependencies)
+    let effects = reducer.reduce(&state, action, &dependencies)
     
     for effect in effects {
-      effect.run { [weak self] action in
+      let cancellable = effect.run { [weak self] action in
         self?.send(action)
       }
+      cancellables.insert(cancellable)
     }
   }
   

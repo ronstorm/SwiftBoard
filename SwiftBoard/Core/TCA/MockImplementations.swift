@@ -24,7 +24,7 @@ public struct MockAPIClient: APIClient {
         let response = LoginResponse(
           accessToken: "mock_access_token",
           refreshToken: "mock_refresh_token",
-          user: User(
+          user: UserResponse(
             id: "1",
             name: "Test User",
             avatarUrl: "https://example.com/avatar.jpg",
@@ -45,7 +45,7 @@ public struct MockAPIClient: APIClient {
       }
       
     case .me:
-      let response = User(
+      let response = UserResponse(
         id: "1",
         name: "Test User",
         avatarUrl: "https://example.com/avatar.jpg",
@@ -204,19 +204,119 @@ public struct LiveDateProvider: DateProvider {
   public init() {}
 }
 
+// MARK: - Mock User Repository
+
+public class MockUserRepository: UserRepository {
+  private var users: [String: MockUser] = [:]
+  private var currentUser: MockUser?
+  
+  public init() {}
+  
+  public func createUser(name: String, email: String, password: String) async throws -> UserProtocol {
+    if users[email] != nil {
+      throw UserRepositoryError.userAlreadyExists
+    }
+    
+    let mockUser = MockUser(
+      id: UUID().uuidString,
+      name: name,
+      email: email,
+      passwordHash: PasswordHasher.hash(password: password, email: email),
+      createdAt: Date(),
+      isCurrent: false
+    )
+    
+    users[email] = mockUser
+    return mockUser.toCoreDataUser()
+  }
+  
+  public func findUser(by email: String) async throws -> UserProtocol? {
+    return users[email]?.toCoreDataUser()
+  }
+  
+  public func authenticateUser(email: String, password: String) async throws -> UserProtocol? {
+    guard let mockUser = users[email] else { return nil }
+    
+    let hashedPassword = PasswordHasher.hash(password: password, email: email)
+    guard mockUser.passwordHash == hashedPassword else { return nil }
+    
+    return mockUser.toCoreDataUser()
+  }
+  
+  public func setCurrentUser(_ user: UserProtocol) async throws {
+    currentUser = nil
+    // Find the mock user and set as current
+    for (_, mockUser) in users {
+      if mockUser.id == user.id {
+        currentUser = mockUser
+        break
+      }
+    }
+  }
+  
+  public func getCurrentUser() async throws -> UserProtocol? {
+    return currentUser?.toCoreDataUser()
+  }
+  
+  public func signOut() async throws {
+    currentUser = nil
+  }
+}
+
+// MARK: - Mock User Model
+
+private struct MockUser {
+  let id: String
+  let name: String
+  let email: String
+  let passwordHash: String
+  let createdAt: Date
+  let isCurrent: Bool
+  
+  func toCoreDataUser() -> UserProtocol {
+    // For testing purposes, we'll create a mock User object
+    // In a real test, you would use an in-memory Core Data stack
+    let user = MockCoreDataUser()
+    user.id = id
+    user.name = name
+    user.email = email
+    user.passwordHash = passwordHash
+    user.createdAt = createdAt
+    user.isCurrent = isCurrent
+    return user
+  }
+}
+
+// MARK: - Mock Core Data User for Testing
+
+/// Mock implementation of Core Data User for testing purposes
+public class MockCoreDataUser: NSObject, UserProtocol {
+  public var id: String?
+  public var name: String?
+  public var email: String?
+  public var passwordHash: String?
+  public var lastLogin: Date?
+  public var isCurrent: Bool = false
+  public var createdAt: Date?
+  
+  public override init() {
+    super.init()
+  }
+}
+
 // MARK: - Supporting Types
 
 public struct LoginResponse: Codable {
   public let accessToken: String
   public let refreshToken: String
-  public let user: User
+  public let user: UserResponse
 }
 
 public struct RefreshResponse: Codable {
   public let accessToken: String
 }
 
-public struct User: Codable {
+public struct UserResponse: Codable {
   public let id: String
   public let name: String
   public let avatarUrl: String

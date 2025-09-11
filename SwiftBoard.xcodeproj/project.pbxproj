@@ -77,7 +77,6 @@
 			children = (
 				626C06472E703BF40052206A /* SwiftBoard */,
 				626C065B2E703BF60052206A /* SwiftBoardTests */,
-				626C06652E703BF60052206A /* SwiftBoardUITests */,
 				626C06462E703BF40052206A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +86,6 @@
 			children = (
 				626C06452E703BF40052206A /* SwiftBoard.app */,
 				626C06582E703BF60052206A /* SwiftBoardTests.xctest */,
-				626C06622E703BF60052206A /* SwiftBoardUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,29 +138,7 @@
 			productReference = 626C06582E703BF60052206A /* SwiftBoardTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		626C06612E703BF60052206A /* SwiftBoardUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 626C06722E703BF60052206A /* Build configuration list for PBXNativeTarget "SwiftBoardUITests" */;
-			buildPhases = (
-				626C065E2E703BF60052206A /* Sources */,
-				626C065F2E703BF60052206A /* Frameworks */,
-				626C06602E703BF60052206A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				626C06642E703BF60052206A /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				626C06652E703BF60052206A /* SwiftBoardUITests */,
-			);
-			name = SwiftBoardUITests;
-			packageProductDependencies = (
-			);
-			productName = SwiftBoardUITests;
-			productReference = 626C06622E703BF60052206A /* SwiftBoardUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
+/* SwiftBoardUITests native target removed */
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -204,7 +180,6 @@
 			targets = (
 				626C06442E703BF40052206A /* SwiftBoard */,
 				626C06572E703BF60052206A /* SwiftBoardTests */,
-				626C06612E703BF60052206A /* SwiftBoardUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -575,15 +550,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		626C06722E703BF60052206A /* Build configuration list for PBXNativeTarget "SwiftBoardUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				626C06732E703BF60052206A /* Debug */,
-				626C06742E703BF60052206A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
+/* Build configuration list for SwiftBoardUITests removed */
 /* End XCConfigurationList section */
 	};
 	rootObject = 626C063D2E703BF40052206A /* Project object */;

@@ -22,6 +22,7 @@ public struct OnboardingView: View {
     }
     
     public var body: some View {
+        // swiftlint:disable closure_body_length
         WithViewStore(store) { viewStore in
             GeometryReader { geometry in
                 VStack(spacing: 0) {
@@ -63,13 +64,15 @@ public struct OnboardingView: View {
                         currentPage = newValue
                     }
                 }
-                .onChange(of: viewStore.state.isCompleted) { _, isCompleted in
-                    if isCompleted {
-                        onCompleted?()
-                    }
-                }
+//                .onChange(of: viewStore.state.isCompleted) { _, isCompleted in
+//                    print("isCompleted: \(isCompleted)")
+//                    if isCompleted {
+//                        onCompleted?()
+//                    }
+//                }
             }
         }
+        // swiftlint:enable closure_body_length
     }
     
     // MARK: - Progress Indicator
@@ -146,6 +149,11 @@ public struct OnboardingView: View {
             Button(action: {
                 if currentPage == viewStore.state.totalPages - 1 {
                     viewStore.send(.continueTapped)
+                    
+                    // Navigate immediately (UI flow)
+                    DispatchQueue.main.async {
+                        onCompleted?()
+                    }
                 } else {
                     withAnimation(.easeInOut) {
                         currentPage += 1
