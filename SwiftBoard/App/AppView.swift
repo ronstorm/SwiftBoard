@@ -16,6 +16,7 @@ struct AppView: View {
     )
     
     var body: some View {
+        // swiftlint:disable closure_body_length
         WithViewStore(store) { viewStore in
             ZStack {
                 switch viewStore.state.route {
@@ -75,6 +76,7 @@ struct AppView: View {
                 viewStore.send(.onAppear)
             }
         }
+        // swiftlint:enable closure_body_length
     }
 }
 

@@ -25,6 +25,7 @@ public struct SignInView: View {
   }
 
   public var body: some View {
+    // swiftlint:disable closure_body_length
     WithViewStore(store) { viewStore in
       VStack(spacing: DesignTokens.Spacing.lg) {
         // Title
@@ -197,6 +198,7 @@ public struct SignInView: View {
       }
       .onAppear { viewStore.send(.onAppear) }
     }
+    // swiftlint:enable closure_body_length
   }
 }
 

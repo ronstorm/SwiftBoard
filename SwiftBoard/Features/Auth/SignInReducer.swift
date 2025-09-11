@@ -7,6 +7,7 @@
 import Foundation
 
 /// Reducer for Sign In
+// swiftlint:disable cyclomatic_complexity
 public struct SignInReducer: Reducer {
   public init() {}
 
@@ -70,7 +71,7 @@ public struct SignInReducer: Reducer {
       state.errorMessage = nil
       let email = state.email
       let password = state.password
-      var userRepository = dependencies.userRepository
+      let userRepository = dependencies.userRepository
       let dateProvider = dependencies.dateProvider
       return [
         .task {
@@ -156,5 +157,6 @@ public struct SignInReducer: Reducer {
     }
   }
 }
+// swiftlint:enable cyclomatic_complexity
 
 

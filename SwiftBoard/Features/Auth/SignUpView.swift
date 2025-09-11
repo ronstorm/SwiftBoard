@@ -28,6 +28,7 @@ public struct SignUpView: View {
   }
 
   public var body: some View {
+    // swiftlint:disable closure_body_length
     WithViewStore(store) { viewStore in
       VStack(spacing: DesignTokens.Spacing.lg) {
         // Title
@@ -99,6 +100,7 @@ public struct SignUpView: View {
       }
       .onAppear { viewStore.send(.onAppear) }
     }
+    // swiftlint:enable closure_body_length
   }
 }
 

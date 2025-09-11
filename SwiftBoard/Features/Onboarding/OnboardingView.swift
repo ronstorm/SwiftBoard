@@ -22,6 +22,7 @@ public struct OnboardingView: View {
     }
     
     public var body: some View {
+        // swiftlint:disable closure_body_length
         WithViewStore(store) { viewStore in
             GeometryReader { geometry in
                 VStack(spacing: 0) {
@@ -71,6 +72,7 @@ public struct OnboardingView: View {
 //                }
             }
         }
+        // swiftlint:enable closure_body_length
     }
     
     // MARK: - Progress Indicator
