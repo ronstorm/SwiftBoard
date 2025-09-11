@@ -64,7 +64,7 @@ jobs:
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
           
-    - name: Run Tests
+    - name: Run Tests (Unit only)
       timeout-minutes: 10
       run: |
         # Run unit tests only (UI tests removed from CI)

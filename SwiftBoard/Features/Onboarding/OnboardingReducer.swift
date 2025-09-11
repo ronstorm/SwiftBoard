@@ -18,7 +18,6 @@ public struct OnboardingReducer: Reducer {
         switch action {
         case .continueTapped:
             if state.isLastPage {
-                print("Last page reached")
                 state.isCompleted = true
                 return [.init(.onboardingCompleted)]
             } else {
