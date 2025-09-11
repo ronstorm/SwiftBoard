@@ -30,7 +30,7 @@ final class SignUpReducerTests: XCTestCase {
     // Wait for async effect to complete by checking state changes
     var attempts = 0
     while store.state.isSubmitting && attempts < 100 {
-      try? await Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
+      try? await _Concurrency.Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
       attempts += 1
     }
     
@@ -65,7 +65,7 @@ final class SignUpReducerTests: XCTestCase {
     // Wait for first signup to complete
     var attempts = 0
     while store.state.isSubmitting && attempts < 100 {
-      try? await Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
+      try? await _Concurrency.Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
       attempts += 1
     }
 
@@ -85,7 +85,7 @@ final class SignUpReducerTests: XCTestCase {
     // Wait for second signup to complete
     attempts = 0
     while newStore.state.isSubmitting && attempts < 100 {
-      try? await Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
+      try? await _Concurrency.Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
       attempts += 1
     }
 

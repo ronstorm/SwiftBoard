@@ -92,7 +92,7 @@ struct TestReducer: Reducer {
     case .incrementAsync:
       let currentCount = state.count
       return [.task {
-        try await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds
+        try await _Concurrency.Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds
         return .setCount(currentCount + 1)
       }]
       

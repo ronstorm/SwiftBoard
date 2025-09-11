@@ -14,19 +14,11 @@
 			remoteGlobalIDString = 626C06442E703BF40052206A;
 			remoteInfo = SwiftBoard;
 		};
-		626C06632E703BF60052206A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 626C063D2E703BF40052206A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 626C06442E703BF40052206A;
-			remoteInfo = SwiftBoard;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		626C06452E703BF40052206A /* SwiftBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		626C06582E703BF60052206A /* SwiftBoardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBoardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		626C06622E703BF60052206A /* SwiftBoardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBoardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,11 +32,6 @@
 			path = SwiftBoardTests;
 			sourceTree = "<group>";
 		};
-		626C06652E703BF60052206A /* SwiftBoardUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftBoardUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,13 +43,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		626C06552E703BF60052206A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		626C065F2E703BF60052206A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -138,7 +118,6 @@
 			productReference = 626C06582E703BF60052206A /* SwiftBoardTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-/* SwiftBoardUITests native target removed */
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -153,10 +132,6 @@
 						CreatedOnToolsVersion = 16.4;
 					};
 					626C06572E703BF60052206A = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 626C06442E703BF40052206A;
-					};
-					626C06612E703BF60052206A = {
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 626C06442E703BF40052206A;
 					};
@@ -199,13 +174,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		626C06602E703BF60052206A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -223,13 +191,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		626C065E2E703BF60052206A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -237,11 +198,6 @@
 			isa = PBXTargetDependency;
 			target = 626C06442E703BF40052206A /* SwiftBoard */;
 			targetProxy = 626C06592E703BF60052206A /* PBXContainerItemProxy */;
-		};
-		626C06642E703BF60052206A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 626C06442E703BF40052206A /* SwiftBoard */;
-			targetProxy = 626C06632E703BF60052206A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -478,48 +434,6 @@
 			};
 			name = Release;
 		};
-		626C06732E703BF60052206A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.amitsen.SwiftBoardUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = SwiftBoard;
-				XROS_DEPLOYMENT_TARGET = 2.5;
-			};
-			name = Debug;
-		};
-		626C06742E703BF60052206A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.amitsen.SwiftBoardUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = SwiftBoard;
-				XROS_DEPLOYMENT_TARGET = 2.5;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -550,7 +464,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-/* Build configuration list for SwiftBoardUITests removed */
 /* End XCConfigurationList section */
 	};
 	rootObject = 626C063D2E703BF40052206A /* Project object */;
