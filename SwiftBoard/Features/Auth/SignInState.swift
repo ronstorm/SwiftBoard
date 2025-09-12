@@ -34,5 +34,3 @@ public extension SignInState {
     return value.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
   }
 }
-
-

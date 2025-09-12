@@ -136,7 +136,7 @@ public struct SignInView: View {
         }
 
         // Sign In button
-        Button(action: { viewStore.send(.signInTapped) }) {
+        Button(action: { viewStore.send(.signInTapped) }, label: {
           HStack {
             if viewStore.state.isSubmitting {
               ProgressView()
@@ -155,7 +155,7 @@ public struct SignInView: View {
               DesignTokens.Colors.primary.opacity(0.5)
           )
           .cornerRadius(DesignTokens.Radius.md)
-        }
+        })
         .disabled(!viewStore.state.canSubmit)
         .accessibilityLabel("Sign in")
         .accessibilityHint(viewStore.state.canSubmit ? "Tap to sign in to your account" : "Fill in all required fields to enable this button")
@@ -205,5 +205,3 @@ public struct SignInView: View {
 #Preview {
   SignInView()
 }
-
-

@@ -6,8 +6,8 @@
 
 import Foundation
 
-/// Reducer for Sign In
 // swiftlint:disable cyclomatic_complexity
+/// Reducer for Sign In
 public struct SignInReducer: Reducer {
   public init() {}
 
@@ -158,5 +158,3 @@ public struct SignInReducer: Reducer {
   }
 }
 // swiftlint:enable cyclomatic_complexity
-
-

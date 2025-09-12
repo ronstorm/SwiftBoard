@@ -20,5 +20,3 @@ final class DashboardReducerTests: XCTestCase {
     XCTAssertTrue(true)
   }
 }
-
-

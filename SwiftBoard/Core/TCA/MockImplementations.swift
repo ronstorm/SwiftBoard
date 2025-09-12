@@ -246,11 +246,9 @@ public class MockUserRepository: UserRepository {
   public func setCurrentUser(_ user: UserProtocol) async throws {
     currentUser = nil
     // Find the mock user and set as current
-    for (_, mockUser) in users {
-      if mockUser.id == user.id {
-        currentUser = mockUser
-        break
-      }
+    for (_, mockUser) in users where mockUser.id == user.id {
+      currentUser = mockUser
+      break
     }
   }
   
@@ -299,7 +297,7 @@ public class MockCoreDataUser: NSObject, UserProtocol {
   public var isCurrent: Bool = false
   public var createdAt: Date?
   
-  public override init() {
+  override public init() {
     super.init()
   }
 }

@@ -78,7 +78,7 @@ public struct DashboardReducer: Reducer {
       .task {
         let events = try await dependencies.activityRepository.fetchCached(limit: 5)
         return .activityLoaded(events)
-      },
+      }
     ]
   }
   
@@ -104,5 +104,3 @@ public struct DashboardReducer: Reducer {
     ]
   }
 }
-
-

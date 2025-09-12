@@ -21,7 +21,5 @@ public struct DashboardState: Equatable {
   public var isRefreshing: Bool = false
   public var errorBanner: String?
   
-  public init() {}
+  public init() {  }
 }
-
-

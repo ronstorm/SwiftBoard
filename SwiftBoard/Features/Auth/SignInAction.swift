@@ -23,5 +23,3 @@ public enum SignInAction {
   case appleSignInResponseFailure(APIError)
   case dismissError
 }
-
-

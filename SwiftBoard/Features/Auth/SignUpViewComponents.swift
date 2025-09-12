@@ -18,57 +18,66 @@ struct SignUpFormFields: View {
 
   var body: some View {
     VStack(spacing: DesignTokens.Spacing.md) {
-      // Name field
-      SignUpTextField(
-        title: "Full Name",
-        text: Binding(
-          get: { viewStore.state.name },
-          set: { viewStore.send(.nameChanged($0)) }
-        ),
-        error: viewStore.state.nameValidationError,
-        isFocused: $isNameFieldFocused,
-        contentType: .name,
-        onSubmit: { viewStore.send(.nameFocusLost) }
-      )
-
-      // Email field
-      SignUpTextField(
-        title: "Email",
-        text: Binding(
-          get: { viewStore.state.email },
-          set: { viewStore.send(.emailChanged($0)) }
-        ),
-        error: viewStore.state.emailValidationError,
-        isFocused: $isEmailFieldFocused,
-        contentType: .emailAddress,
-        keyboardType: .emailAddress,
-        onSubmit: { viewStore.send(.emailFocusLost) }
-      )
-
-      // Password field
-      SignUpSecureField(
-        title: "Password",
-        text: Binding(
-          get: { viewStore.state.password },
-          set: { viewStore.send(.passwordChanged($0)) }
-        ),
-        error: viewStore.state.passwordValidationError,
-        isFocused: $isPasswordFieldFocused,
-        onSubmit: { viewStore.send(.passwordFocusLost) }
-      )
-
-      // Confirm Password field
-      SignUpSecureField(
-        title: "Confirm Password",
-        text: Binding(
-          get: { viewStore.state.confirmPassword },
-          set: { viewStore.send(.confirmPasswordChanged($0)) }
-        ),
-        error: viewStore.state.confirmPasswordValidationError,
-        isFocused: $isConfirmPasswordFieldFocused,
-        onSubmit: { viewStore.send(.confirmPasswordFocusLost) }
-      )
+      nameField
+      emailField
+      passwordField
+      confirmPasswordField
     }
+  }
+  
+  private var nameField: some View {
+    SignUpTextField(
+      title: "Full Name",
+      text: Binding(
+        get: { viewStore.state.name },
+        set: { viewStore.send(.nameChanged($0)) }
+      ),
+      error: viewStore.state.nameValidationError,
+      isFocused: $isNameFieldFocused,
+      contentType: .name,
+      onSubmit: { viewStore.send(.nameFocusLost) }
+    )
+  }
+  
+  private var emailField: some View {
+    SignUpTextField(
+      title: "Email",
+      text: Binding(
+        get: { viewStore.state.email },
+        set: { viewStore.send(.emailChanged($0)) }
+      ),
+      error: viewStore.state.emailValidationError,
+      isFocused: $isEmailFieldFocused,
+      contentType: .emailAddress,
+      keyboardType: .emailAddress,
+      onSubmit: { viewStore.send(.emailFocusLost) }
+    )
+  }
+  
+  private var passwordField: some View {
+    SignUpSecureField(
+      title: "Password",
+      text: Binding(
+        get: { viewStore.state.password },
+        set: { viewStore.send(.passwordChanged($0)) }
+      ),
+      error: viewStore.state.passwordValidationError,
+      isFocused: $isPasswordFieldFocused,
+      onSubmit: { viewStore.send(.passwordFocusLost) }
+    )
+  }
+  
+  private var confirmPasswordField: some View {
+    SignUpSecureField(
+      title: "Confirm Password",
+      text: Binding(
+        get: { viewStore.state.confirmPassword },
+        set: { viewStore.send(.confirmPasswordChanged($0)) }
+      ),
+      error: viewStore.state.confirmPasswordValidationError,
+      isFocused: $isConfirmPasswordFieldFocused,
+      onSubmit: { viewStore.send(.confirmPasswordFocusLost) }
+    )
   }
 }
 
@@ -177,7 +186,7 @@ struct SignUpButton: View {
   var body: some View {
     Button(action: {
       viewStore.send(.signUpTapped)
-    }) {
+    }, label: {
       HStack {
         if viewStore.state.isSubmitting {
           ProgressView()
@@ -196,7 +205,7 @@ struct SignUpButton: View {
           DesignTokens.Colors.primary.opacity(0.5)
       )
       .cornerRadius(DesignTokens.Radius.md)
-    }
+    })
     .disabled(!viewStore.state.canSubmit)
     .accessibilityLabel("Create account button")
     .accessibilityHint(viewStore.state.canSubmit ? "Tap to create your account" : "Fill in all required fields to enable this button")

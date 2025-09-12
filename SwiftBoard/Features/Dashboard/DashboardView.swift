@@ -18,63 +18,74 @@ public struct DashboardView: View {
   public var body: some View {
     WithViewStore(store) { viewStore in
       VStack(spacing: 0) {
-        // Header
-        HStack {
-          Text("SwiftBoard")
-            .font(DesignTokens.Typography.title2)
-            .foregroundColor(DesignTokens.Colors.onBackground)
-          
-          Spacer()
-          
-          HStack(spacing: DesignTokens.Spacing.sm) {
-            // Profile avatar
-            Circle()
-              .fill(DesignTokens.Colors.primary)
-              .frame(width: 32, height: 32)
-              .overlay(
-                Image(systemName: "person.fill")
-                  .foregroundColor(DesignTokens.Colors.onPrimary)
-                  .font(.system(size: 16))
-              )
-            
-            // Settings icon
-            Button(action: {}) {
-              Image(systemName: "gearshape.fill")
-                .foregroundColor(DesignTokens.Colors.onBackground)
-                .font(.system(size: 20))
-            }
-          }
-        }
-        .padding(.horizontal, DesignTokens.Spacing.lg)
-        .padding(.top, DesignTokens.Spacing.sm)
-        .padding(.bottom, DesignTokens.Spacing.lg)
-        
-        // Content
-        ScrollView {
-          VStack(spacing: DesignTokens.Spacing.lg) {
-            ProfileCard(profile: viewStore.state.profile)
-            TasksCard(tasks: viewStore.state.tasks)
-            ActivityCard(events: viewStore.state.activity)
-          }
-          .padding(.horizontal, DesignTokens.Spacing.lg)
-          .padding(.bottom, DesignTokens.Spacing.xl)
-        }
+        headerView
+        contentView(viewStore: viewStore)
       }
       .background(DesignTokens.Colors.background)
       .onAppear { viewStore.send(.onAppear) }
       .refreshable { viewStore.send(.pullToRefresh) }
       .overlay(alignment: .top) {
-        if let message = viewStore.state.errorBanner {
-          Text(message)
-            .font(DesignTokens.Typography.footnote)
-            .foregroundColor(DesignTokens.Colors.onError)
-            .padding(8)
-            .background(DesignTokens.Colors.error)
-            .cornerRadius(8)
-            .padding()
-            .onTapGesture { viewStore.send(.dismissBanner) }
-            .accessibilityLabel("Error: \(message)")
-        }
+        errorBannerView(viewStore: viewStore)
+      }
+    }
+  }
+  
+  private var headerView: some View {
+    HStack {
+      Text("SwiftBoard")
+        .font(DesignTokens.Typography.title2)
+        .foregroundColor(DesignTokens.Colors.onBackground)
+      
+      Spacer()
+      
+      HStack(spacing: DesignTokens.Spacing.sm) {
+        // Profile avatar
+        Circle()
+          .fill(DesignTokens.Colors.primary)
+          .frame(width: 32, height: 32)
+          .overlay(
+            Image(systemName: "person.fill")
+              .foregroundColor(DesignTokens.Colors.onPrimary)
+              .font(.system(size: 16))
+          )
+        
+        // Settings icon
+        Button(action: {}, label: {
+          Image(systemName: "gearshape.fill")
+            .foregroundColor(DesignTokens.Colors.onBackground)
+            .font(.system(size: 20))
+        })
+      }
+    }
+    .padding(.horizontal, DesignTokens.Spacing.lg)
+    .padding(.top, DesignTokens.Spacing.sm)
+    .padding(.bottom, DesignTokens.Spacing.lg)
+  }
+  
+  private func contentView(viewStore: ViewStore<DashboardState, DashboardAction>) -> some View {
+    ScrollView {
+      VStack(spacing: DesignTokens.Spacing.lg) {
+        ProfileCard(profile: viewStore.state.profile)
+        TasksCard(tasks: viewStore.state.tasks)
+        ActivityCard(events: viewStore.state.activity)
+      }
+      .padding(.horizontal, DesignTokens.Spacing.lg)
+      .padding(.bottom, DesignTokens.Spacing.xl)
+    }
+  }
+  
+  private func errorBannerView(viewStore: ViewStore<DashboardState, DashboardAction>) -> some View {
+    Group {
+      if let message = viewStore.state.errorBanner {
+        Text(message)
+          .font(DesignTokens.Typography.footnote)
+          .foregroundColor(DesignTokens.Colors.onError)
+          .padding(8)
+          .background(DesignTokens.Colors.error)
+          .cornerRadius(8)
+          .padding()
+          .onTapGesture { viewStore.send(.dismissBanner) }
+          .accessibilityLabel("Error: \(message)")
       }
     }
   }
@@ -86,10 +97,14 @@ public struct ProfileCard: View {
   private var greeting: String {
     let hour = Calendar.current.component(.hour, from: Date())
     switch hour {
-    case 5..<12: return "Good morning"
-    case 12..<17: return "Good afternoon"
-    case 17..<22: return "Good evening"
-    default: return "Good night"
+    case 5..<12:
+      return "Good morning"
+    case 12..<17:
+      return "Good afternoon"
+    case 17..<22:
+      return "Good evening"
+    default:
+      return "Good night"
     }
   }
   
@@ -150,53 +165,8 @@ public struct TasksCard: View {
   
   public var body: some View {
     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-      // Header with title and "See All" link
-      HStack {
-        Text("My Tasks")
-          .font(DesignTokens.Typography.title3)
-          .foregroundColor(DesignTokens.Colors.onSurface)
-        
-        Spacer()
-        
-        Button("See All") {
-          // TODO: Navigate to full tasks list
-        }
-        .font(DesignTokens.Typography.footnote)
-        .foregroundColor(DesignTokens.Colors.primary)
-      }
-      
-      // Tasks list
-      VStack(spacing: DesignTokens.Spacing.sm) {
-        ForEach(tasks.prefix(5), id: \.id) { task in
-          HStack(spacing: DesignTokens.Spacing.sm) {
-            Button(action: {
-              // TODO: Toggle task completion
-            }) {
-              Image(systemName: task.done ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(task.done ? DesignTokens.Colors.success : DesignTokens.Colors.outline)
-                .font(.system(size: 20))
-            }
-            .buttonStyle(PlainButtonStyle())
-            
-            Text(task.title ?? "")
-              .font(DesignTokens.Typography.body)
-              .foregroundColor(task.done ? DesignTokens.Colors.onSurfaceVariant : DesignTokens.Colors.onSurface)
-              .strikethrough(task.done)
-            
-            Spacer()
-          }
-          .accessibilityElement(children: .combine)
-          .accessibilityLabel("Task: \(task.title ?? ""), \(task.done ? "completed" : "pending")")
-        }
-        
-        if tasks.isEmpty {
-          Text("No tasks yet")
-            .font(DesignTokens.Typography.body)
-            .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, DesignTokens.Spacing.md)
-        }
-      }
+      tasksHeader
+      tasksList
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(DesignTokens.Spacing.lg)
@@ -205,6 +175,64 @@ public struct TasksCard: View {
     .shadow(DesignTokens.Shadow.small)
     .accessibilityLabel("Tasks card")
   }
+  
+  private var tasksHeader: some View {
+    HStack {
+      Text("My Tasks")
+        .font(DesignTokens.Typography.title3)
+        .foregroundColor(DesignTokens.Colors.onSurface)
+      
+      Spacer()
+      
+      Button("See All") {
+        // TODO: Navigate to full tasks list
+      }
+      .font(DesignTokens.Typography.footnote)
+      .foregroundColor(DesignTokens.Colors.primary)
+    }
+  }
+  
+  private var tasksList: some View {
+    VStack(spacing: DesignTokens.Spacing.sm) {
+      ForEach(tasks.prefix(5), id: \.id) { task in
+        TaskRowView(task: task)
+      }
+      
+      if tasks.isEmpty {
+        Text("No tasks yet")
+          .font(DesignTokens.Typography.body)
+          .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .padding(.vertical, DesignTokens.Spacing.md)
+      }
+    }
+  }
+}
+
+public struct TaskRowView: View {
+  let task: Task
+  
+  public var body: some View {
+    HStack(spacing: DesignTokens.Spacing.sm) {
+      Button(action: {
+        // TODO: Toggle task completion
+      }, label: {
+        Image(systemName: task.done ? "checkmark.circle.fill" : "circle")
+          .foregroundColor(task.done ? DesignTokens.Colors.success : DesignTokens.Colors.outline)
+          .font(.system(size: 20))
+      })
+      .buttonStyle(PlainButtonStyle())
+      
+      Text(task.title ?? "")
+        .font(DesignTokens.Typography.body)
+        .foregroundColor(task.done ? DesignTokens.Colors.onSurfaceVariant : DesignTokens.Colors.onSurface)
+        .strikethrough(task.done)
+      
+      Spacer()
+    }
+    .accessibilityElement(children: .combine)
+    .accessibilityLabel("Task: \(task.title ?? ""), \(task.done ? "completed" : "pending")")
+  }
 }
 
 public struct ActivityCard: View {
@@ -212,60 +240,8 @@ public struct ActivityCard: View {
   
   public var body: some View {
     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-      // Header with title and "See All" link
-      HStack {
-        Text("Recent Activity")
-          .font(DesignTokens.Typography.title3)
-          .foregroundColor(DesignTokens.Colors.onSurface)
-        
-        Spacer()
-        
-        Button("See All") {
-          // TODO: Navigate to full activity list
-        }
-        .font(DesignTokens.Typography.footnote)
-        .foregroundColor(DesignTokens.Colors.primary)
-      }
-      
-      // Activity list
-      VStack(spacing: DesignTokens.Spacing.sm) {
-        ForEach(events.prefix(5), id: \.id) { event in
-          HStack(spacing: DesignTokens.Spacing.sm) {
-            // Activity icon
-            Circle()
-              .fill(iconColor(for: event))
-              .frame(width: 32, height: 32)
-              .overlay(
-                Image(systemName: iconName(for: event))
-                  .foregroundColor(.white)
-                  .font(.system(size: 14, weight: .medium))
-              )
-            
-            VStack(alignment: .leading, spacing: 2) {
-              Text(event.title ?? "")
-                .font(DesignTokens.Typography.body)
-                .foregroundColor(DesignTokens.Colors.onSurface)
-                .lineLimit(2)
-              
-              Text(formatTimestamp(event.createdAt))
-                .font(DesignTokens.Typography.footnote)
-                .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
-            }
-            
-            Spacer()
-          }
-          .accessibilityElement(children: .combine)
-          .accessibilityLabel("Activity: \(event.title ?? "")")
-        }
-        
-        if events.isEmpty {
-          Text("No recent activity")
-            .font(DesignTokens.Typography.body)
-            .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, DesignTokens.Spacing.md)
-        }
-      }
+      activityHeader
+      activityList
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(DesignTokens.Spacing.lg)
@@ -273,6 +249,71 @@ public struct ActivityCard: View {
     .cornerRadius(DesignTokens.Radius.lg)
     .shadow(DesignTokens.Shadow.small)
     .accessibilityLabel("Activity card")
+  }
+  
+  private var activityHeader: some View {
+    HStack {
+      Text("Recent Activity")
+        .font(DesignTokens.Typography.title3)
+        .foregroundColor(DesignTokens.Colors.onSurface)
+      
+      Spacer()
+      
+      Button("See All") {
+        // TODO: Navigate to full activity list
+      }
+      .font(DesignTokens.Typography.footnote)
+      .foregroundColor(DesignTokens.Colors.primary)
+    }
+  }
+  
+  private var activityList: some View {
+    VStack(spacing: DesignTokens.Spacing.sm) {
+      ForEach(events.prefix(5), id: \.id) { event in
+        ActivityRowView(event: event)
+      }
+      
+      if events.isEmpty {
+        Text("No recent activity")
+          .font(DesignTokens.Typography.body)
+          .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .padding(.vertical, DesignTokens.Spacing.md)
+      }
+    }
+  }
+}
+
+public struct ActivityRowView: View {
+  let event: ActivityEvent
+  
+  public var body: some View {
+    HStack(spacing: DesignTokens.Spacing.sm) {
+      // Activity icon
+      Circle()
+        .fill(iconColor(for: event))
+        .frame(width: 32, height: 32)
+        .overlay(
+          Image(systemName: iconName(for: event))
+            .foregroundColor(.white)
+            .font(.system(size: 14, weight: .medium))
+        )
+      
+      VStack(alignment: .leading, spacing: 2) {
+        Text(event.title ?? "")
+          .font(DesignTokens.Typography.body)
+          .foregroundColor(DesignTokens.Colors.onSurface)
+          .lineLimit(2)
+        
+        Text(formatTimestamp(event.createdAt))
+          .font(DesignTokens.Typography.footnote)
+          .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
+      }
+      
+      Spacer()
+    }
+    .accessibilityElement(children: .combine)
+    .accessibilityLabel("Activity: \(event.title ?? "")")
   }
   
   private func iconName(for event: ActivityEvent) -> String {
@@ -329,5 +370,3 @@ public struct ActivityCard: View {
 #Preview {
   DashboardView()
 }
-
-

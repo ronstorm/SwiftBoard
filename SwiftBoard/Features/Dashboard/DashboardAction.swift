@@ -21,9 +21,8 @@ public enum DashboardError: Error, LocalizedError, Equatable {
   
   public var errorDescription: String? {
     switch self {
-    case .refreshFailed: return "Failed to refresh data"
+    case .refreshFailed:
+      return "Failed to refresh data"
     }
   }
 }
-
-
