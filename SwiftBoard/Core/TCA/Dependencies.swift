@@ -18,6 +18,8 @@ public struct Dependencies {
   // MARK: - Storage
   public let coreDataService: CoreDataService
   public var userRepository: UserRepository
+  public var taskRepository: TaskRepository
+  public var activityRepository: ActivityRepository
   
   // MARK: - System Services
   public let logger: Logger
@@ -29,6 +31,8 @@ public struct Dependencies {
     keychainService: KeychainService = .live,
     coreDataService: CoreDataService = .live,
     userRepository: UserRepository = .live,
+    taskRepository: TaskRepository = .live,
+    activityRepository: ActivityRepository = .live,
     logger: Logger = .live,
     analytics: AnalyticsService = .live,
     dateProvider: DateProvider = .live
@@ -37,6 +41,8 @@ public struct Dependencies {
     self.keychainService = keychainService
     self.coreDataService = coreDataService
     self.userRepository = userRepository
+    self.taskRepository = taskRepository
+    self.activityRepository = activityRepository
     self.logger = logger
     self.analytics = analytics
     self.dateProvider = dateProvider
@@ -48,6 +54,8 @@ public struct Dependencies {
     keychainService: .mock,
     coreDataService: .preview,
     userRepository: .mock,
+    taskRepository: .mock,
+    activityRepository: .mock,
     logger: .mock,
     analytics: .mock,
     dateProvider: .mock
@@ -138,4 +146,24 @@ public extension UserRepository where Self == LiveUserRepository {
     LiveUserRepository(context: PersistenceController.shared.container.viewContext) 
   }
   static var mock: MockUserRepository { MockUserRepository() }
+}
+
+public extension TaskRepository where Self == LiveTaskRepository {
+  static var live: LiveTaskRepository {
+    LiveTaskRepository(
+      context: PersistenceController.shared.container.viewContext,
+      apiClient: .live
+    )
+  }
+  static var mock: MockTaskRepository { MockTaskRepository() }
+}
+
+public extension ActivityRepository where Self == LiveActivityRepository {
+  static var live: LiveActivityRepository {
+    LiveActivityRepository(
+      context: PersistenceController.shared.container.viewContext,
+      apiClient: .live
+    )
+  }
+  static var mock: MockActivityRepository { MockActivityRepository() }
 }

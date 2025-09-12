@@ -160,7 +160,7 @@ public struct OnboardingView: View {
                     }
                     viewStore.send(.pageChanged(currentPage))
                 }
-            }) {
+            }, label: {
               HStack {
                 Text(currentPage == viewStore.state.totalPages - 1 ? "Get Started" : "Continue")
                   .font(DesignTokens.Typography.headline)
@@ -175,7 +175,7 @@ public struct OnboardingView: View {
               .frame(height: 56)
               .background(DesignTokens.Colors.primary)
               .cornerRadius(DesignTokens.Radius.lg)
-            }
+            })
             .disabled(!viewStore.state.isContinueEnabled)
             .accessibilityLabel(currentPage == viewStore.state.totalPages - 1 ? "Get started with SwiftBoard" : "Continue to next page")
             .accessibilityHint(currentPage == viewStore.state.totalPages - 1 ? "Completes onboarding and proceeds to sign in" : "Shows the next onboarding page")

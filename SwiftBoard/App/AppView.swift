@@ -191,21 +191,6 @@ struct AuthView: View {
     }
 }
 
-struct DashboardView: View {
-    var body: some View {
-        VStack(spacing: DesignTokens.Spacing.lg) {
-            Text("Dashboard")
-                .font(DesignTokens.Typography.largeTitle)
-                .foregroundColor(DesignTokens.Colors.onBackground)
-            
-            Text("Dashboard view will be implemented in B-006")
-                .font(DesignTokens.Typography.body)
-                .foregroundColor(DesignTokens.Colors.onSurfaceVariant)
-                .multilineTextAlignment(.center)
-        }
-        .padding(DesignTokens.Spacing.xl)
-    }
-}
 
 // MARK: - Button Styles
 

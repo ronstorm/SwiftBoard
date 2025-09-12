@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Reducer for Sign Up
 // swiftlint:disable cyclomatic_complexity
+/// Reducer for Sign Up
 public struct SignUpReducer: Reducer {
   public init() {}
 
@@ -138,7 +138,7 @@ public struct SignUpReducer: Reducer {
         }
       ]
 
-    case .signUpResponseSuccess(_):
+    case .signUpResponseSuccess:
       state.isSubmitting = false
       state.isAuthenticated = true
       return []

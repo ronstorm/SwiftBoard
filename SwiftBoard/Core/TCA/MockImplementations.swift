@@ -16,7 +16,7 @@ public struct MockAPIClient: APIClient {
   
   public func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T {
     // Simulate network delay
-    try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+    try await _Concurrency.Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
     
     switch endpoint {
     case .login(let email, let password):
@@ -246,11 +246,9 @@ public class MockUserRepository: UserRepository {
   public func setCurrentUser(_ user: UserProtocol) async throws {
     currentUser = nil
     // Find the mock user and set as current
-    for (_, mockUser) in users {
-      if mockUser.id == user.id {
-        currentUser = mockUser
-        break
-      }
+    for (_, mockUser) in users where mockUser.id == user.id {
+      currentUser = mockUser
+      break
     }
   }
   
@@ -299,7 +297,7 @@ public class MockCoreDataUser: NSObject, UserProtocol {
   public var isCurrent: Bool = false
   public var createdAt: Date?
   
-  public override init() {
+  override public init() {
     super.init()
   }
 }
@@ -355,4 +353,23 @@ public enum APIError: Error, LocalizedError {
       return "Failed to decode response"
     }
   }
+}
+
+// MARK: - Mock Task Repository
+
+public final class MockTaskRepository: TaskRepository {
+  public init() {}
+  public func fetchCached(limit: Int) async throws -> [Task] { [] }
+  public func refresh(limit: Int) async throws -> [Task] {
+    // Return empty; Dashboard tests can inject desired behavior via APIClient
+    []
+  }
+}
+
+// MARK: - Mock Activity Repository
+
+public final class MockActivityRepository: ActivityRepository {
+  public init() {}
+  public func fetchCached(limit: Int) async throws -> [ActivityEvent] { [] }
+  public func refresh(limit: Int) async throws -> [ActivityEvent] { [] }
 }

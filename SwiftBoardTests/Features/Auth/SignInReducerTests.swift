@@ -30,5 +30,3 @@ final class SignInReducerTests: XCTestCase {
     XCTAssertTrue(true)
   }
 }
-
-

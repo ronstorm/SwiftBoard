@@ -79,7 +79,7 @@ extension Effect {
   ) -> Effect<Action> {
     Effect(
       Future { promise in
-        Task(priority: priority) {
+        _Concurrency.Task {
           let action = await operation()
           promise(.success(action))
         }
@@ -95,7 +95,7 @@ extension Effect {
   ) -> Effect<Action> {
     Effect(
       Future { promise in
-        Task(priority: priority) {
+        _Concurrency.Task {
           do {
             let action = try await operation()
             promise(.success(action))

@@ -17,7 +17,7 @@ final class OnboardingReducerTests: XCTestCase {
     XCTAssertFalse(state.isCompleted)
     XCTAssertTrue(state.isContinueEnabled)
     XCTAssertFalse(state.isLastPage)
-    XCTAssertEqual(state.progress, 1.0/3.0, accuracy: 0.01)
+    XCTAssertEqual(state.progress, 1.0 / 3.0, accuracy: 0.01)
   }
   
   func testContinueTappedOnFirstPage() {
@@ -124,11 +124,11 @@ final class OnboardingReducerTests: XCTestCase {
     var state = OnboardingState()
     
     // First page
-    XCTAssertEqual(state.progress, 1.0/3.0, accuracy: 0.01)
+    XCTAssertEqual(state.progress, 1.0 / 3.0, accuracy: 0.01)
     
     // Second page
     state.currentPage = 1
-    XCTAssertEqual(state.progress, 2.0/3.0, accuracy: 0.01)
+    XCTAssertEqual(state.progress, 2.0 / 3.0, accuracy: 0.01)
     
     // Last page
     state.currentPage = 2
